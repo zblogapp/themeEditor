@@ -1856,7 +1856,7 @@ var PhpHighlightRules = function() {
     var startRules = [
         {
             token : "support.php_tag", // php open tag
-            regex : "<\\?(?:php|=)?",
+            regex : "<\\?(?:php|=)?|\{php\}",
             push  : "php-start"
         }
     ];
@@ -1864,7 +1864,7 @@ var PhpHighlightRules = function() {
     var endRules = [
         {
             token : "support.php_tag", // php close tag
-            regex : "\\?>",
+            regex : "\\?>|\{\/php\}",
             next  : "pop"
         }
     ];
