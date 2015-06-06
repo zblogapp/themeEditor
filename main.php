@@ -54,6 +54,7 @@ foreach ($options as $id => $value) {
 </div>
 <script src="ace/ace.js" type="text/javascript"></script>
 <script src="ace/ext-emmet.js" type="text/javascript"></script>
+<script src="ace/ext-beautify.js" type="text/javascript"></script>
 <script src="ace/emmet.js"></script>
 <script>
 $(function() {
@@ -61,6 +62,7 @@ $(function() {
 	var fileChangeState = false;
 	var defaultTheme = localStorage.themeEditorTheme || 'dreamweaver';
 	var emmet = require('ace/ext/emmet');
+	var beautify = require('ace/ext/beautify');
 	var editor = ace.edit("editor");
 	var editorSession = editor.getSession();
 	var saveEditor = function() {
@@ -84,6 +86,7 @@ $(function() {
 	//editor.setOption("minLines", parseInt(screen.height / 20));
 	editor.setOption("maxLines", 10000000);
 	editor.setOption("enableEmmet", true);
+	editor.commands.addCommands(beautify.commands);
 	editor.commands.addCommand({
 		name: "showKeyboardShortcuts",
 		bindKey: {win: "Ctrl-Alt-h", mac: "Command-Alt-h"},
