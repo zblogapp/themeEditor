@@ -15,11 +15,38 @@ require $blogpath . 'zb_system/admin/admin_header.php';
 	height: 32px;
 	top: 0px;
 	width: 80%;
-	z-index: 1000000;
+	z-index: 8888;
 	opacity: 0.8;
 	text-align: center;
 }
-
+.hideLayer {
+	margin: 0px;
+	padding: 0px;
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	z-index: 9990;
+	background-color: rgba(0, 0, 0, 0.298039);
+	display: none;
+}
+.messageBox {
+	position: absolute;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-webkit-transform: translate(-50%, -50%);
+	height: 100px;
+	width: 200px;
+	background: white;
+	border: 1px black solid;
+}
+.content {
+	text-align: center;
+	margin-top: 35px;
+	font-size: 20px;
+}
 </style>
 <?php
 require $blogpath . 'zb_system/admin/admin_top.php';
@@ -52,6 +79,13 @@ foreach ($options as $id => $value) {
   </form>
   </div>
 </div>
+<div class="hideLayer">
+	<div class="messageBox">
+		<div class="content">
+			<img src="../../../zb_system/image/admin/loading.gif" style="margin-right: 10px"/>操作进行中..
+		</div>
+	</div>
+</div>
 <script src="ace/ace.js" type="text/javascript"></script>
 <script src="ace/ext-emmet.js" type="text/javascript"></script>
 <script src="ace/ext-beautify.js" type="text/javascript"></script>
@@ -66,6 +100,7 @@ $(function() {
 	var editor = ace.edit("editor");
 	var editorSession = editor.getSession();
 	var saveEditor = function() {
+		$(".hideLayer").show();
 		$.ajax({
 			url: 'ajax.php?action=save&filename=' + encodeURI($("#fileSelect").val()),
 			data: {
@@ -75,8 +110,9 @@ $(function() {
 			dataType: 'json'
 		}).done(function(data) {
 			fileChangeState = false;
+			document.title = document.title.replace("(*) ", "");
 		}).always(function() {
-
+			$(".hideLayer").hide();
 		});
 	};
 
@@ -105,21 +141,25 @@ $(function() {
 		}
 	});
 	editorSession.on('change', function() {
-		fileChangeState = true;
+		if (!fileChangeState) {
+			fileChangeState = true;
+			document.title = "(*) " + document.title;
+		}
 	});
 	$("#fileSelect").change(function(e) {
 		if (!fileChangeState || confirm('你当前编辑的文件还没保存，确定要切换文件吗？')) {
+			$(".hideLayer").show();
 			$.ajax({
 				url: 'ajax.php?action=load&filename=' + encodeURI($(this).val()),
 				method: 'GET',
 				dataType: 'json'
 			}).done(function(data) {
 				editorSession.setMode('ace/mode/' + data.aceMode);
-
 				editorSession.setValue(data.content);
 				fileChangeState = false;
+				document.title = "Editing " + $("#fileSelect").val();
 			}).always(function() {
-
+				$(".hideLayer").hide();
 			});
 		}
 	});
