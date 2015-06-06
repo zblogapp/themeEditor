@@ -30,7 +30,7 @@ require './function.php';
   <form method="post" id="formSubmit">
   <div class="fixedPanel" style="">
   	<input class="button" type="button" value="保存" id="saveButton" style="margin: 0; height: 32px;">
-  <select style="width: 80%; height: 32px; padding: 0;" id="fileSelect">
+  <select style="width: 60%; height: 32px; padding: 0;" id="fileSelect">
   	<option value="" disabled="disabled" selected="selected">请选择...</option>
   <?php
 $options = scanThemeDir();
@@ -38,6 +38,14 @@ foreach ($options as $id => $value) {
 	echo '<option value="' . $value . '">' . $value . '</option>';
 }
 ?>
+  </select>
+  <select style="width: 20%; height: 32px; padding: 0" id="themeSelect">
+  	<option value="dreamweaver" selected="selected">Dreamweaver</option>
+  	<option value="github">GitHub</option>
+  	<option value="monokai">Monokai</option>
+  	<option value="tomorrow">Tomorrow</option>
+  	<option value="tomorrow_night">Tomorrow_Night</option>
+  	<option value="xcode">XCode</option>
   </select>
 	</div>
 	<div id="editor"></div>
@@ -51,6 +59,7 @@ foreach ($options as $id => $value) {
 $(function() {
 
 	var fileChangeState = false;
+	var defaultTheme = localStorage.themeEditorTheme || 'dreamweaver';
 	var emmet = require('ace/ext/emmet');
 	var editor = ace.edit("editor");
 	var editorSession = editor.getSession();
@@ -69,7 +78,8 @@ $(function() {
 		});
 	};
 
-	editor.setTheme("ace/theme/xcode");
+	editor.setTheme("ace/theme/" + defaultTheme);
+	$("#themeSelect").val(defaultTheme);
 	editor.setAutoScrollEditorIntoView(true);
 	//editor.setOption("minLines", parseInt(screen.height / 20));
 	editor.setOption("maxLines", 10000000);
@@ -118,6 +128,11 @@ $(function() {
 			return;
 		}
 	}
+	$("#themeSelect").change(function(e) {
+		var theme = $(this).val();
+		localStorage.themeEditorTheme = theme;
+		editor.setTheme("ace/theme/" + theme);
+	});
 });
 </script>
 <?php
