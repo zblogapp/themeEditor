@@ -5,7 +5,7 @@ themeEditor
 
 开源许可证（License）：[The MIT License](http://opensource.org/licenses/mit-license.php)
 
-应用中心发布地址：?
+应用中心发布地址：http://app.zblogcn.com/?id=757
 
 ##说明##
 
